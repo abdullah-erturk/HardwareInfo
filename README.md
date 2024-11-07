@@ -18,7 +18,8 @@ VBScript betik dosyası,  3. parti programlara gerek kalmadan Windows işletim s
 ### Katkı Sağlama:
 Bu projeye katkı sağlamak isterseniz, pull request gönderebilir veya issues sekmesinden geri bildirimde bulunabilirsiniz.
 
-
+### Direkt İndirme Linki:
+https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Donan%C4%B1m_Bilgileri.vbs
 
      English Explanation
 
@@ -36,3 +37,6 @@ VBScript file displays a summary of all your hardware information using only the
 
 ### Contributing:
 If you would like to contribute to this project, you can send a pull request or provide feedback through the issues section.
+
+### Direct Download Link:
+https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Hardware_Info.vbs
