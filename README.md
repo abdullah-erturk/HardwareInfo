@@ -4,7 +4,7 @@
 
      Türkçe Açıklama
 ## Donanım Bilgisi 
-Bu VBScript,  3. parti programlara gerek kalmadan Windows işletim sisteminin yerleşik kodlarıyla tüm donanım bilgilerinizin özetini gösterir. Kod, çeşitli sistem bileşenlerine dair bilgileri toplar ve kullanıcıya görsel olarak sunar. Aşağıda, script'in sağladığı başlıca veriler:
+VBScript betik dosyası,  3. parti programlara gerek kalmadan Windows işletim sisteminin yerleşik kodlarıyla tüm donanım bilgilerinizin özetini gösterir. Kod, çeşitli sistem bileşenlerine dair bilgileri toplar ve kullanıcıya görsel olarak sunar. Aşağıda, script'in sağladığı başlıca veriler:
 
 ### Özellikler:
 - **İşletim Sistemi Bilgisi**: Windows sürümü, işletim sistemi mimarisi ve son format tarihi gibi bilgileri görüntüler.
@@ -23,7 +23,7 @@ Bu projeye katkı sağlamak isterseniz, pull request gönderebilir veya issues s
      English Explanation
 
 ## Hardware Info  
-This VBScript displays a summary of all your hardware information using only the built-in Windows system codes, without the need for third-party programs. The script collects information about various system components and presents it visually to the user. Below are the main data provided by the script:
+VBScript file displays a summary of all your hardware information using only the built-in Windows system codes, without the need for third-party programs. The script collects information about various system components and presents it visually to the user. Below are the main data provided by the script:
 
 ### Features:
 - **Operating System Information**: Displays information such as the Windows version, OS architecture, and the last format date.
