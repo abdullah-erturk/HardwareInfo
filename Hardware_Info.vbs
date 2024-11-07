@@ -13,7 +13,6 @@ Set colMB = objWMIService.ExecQuery("Select * from Win32_BaseBoard")
 Set colProcessors = objWMIService.ExecQuery("Select * from Win32_Processor")
 Set colDrives = objWMIService.ExecQuery("Select * from Win32_DiskDrive")
 
-' Total RAM calculation
 Set obj = GetObject("winmgmts:").InstancesOf("Win32_PhysicalMemory")
 TotalRam = 0
 ramDetails = ""
@@ -22,7 +21,21 @@ i = 1
 For Each obj2 In obj
     memTmp1 = obj2.capacity / 1024 / 1024
     TotalRam = TotalRam + memTmp1
-    ramDetails = ramDetails & "Slot " & i & ": " & FormatNumber(memTmp1 / 1024, 2) & " GB, Speed: " & obj2.Speed & " MHz" & vbCrLf
+    ramSpeed = obj2.Speed
+    ramType = ""
+
+    ' Determining the type of RAM (DDR is usually associated with speed)
+    If ramSpeed >= 1600 And ramSpeed < 2133 Then
+        ramType = "DDR3"
+    ElseIf ramSpeed >= 2133 And ramSpeed < 2933 Then
+        ramType = "DDR4"
+    ElseIf ramSpeed >= 2933 Then
+        ramType = "DDR5"
+    Else
+        ramType = "Unknown"
+    End If
+
+    ramDetails = ramDetails & "Slot " & i & ": " & FormatNumber(memTmp1 / 1024, 2) & " GB, Speed: " & obj2.Speed & " MHz, Type: " & ramType & vbCrLf
     i = i + 1
 Next
 
@@ -150,4 +163,4 @@ Next
 
 ' Display with WshShell.Popup
 Set WshShell = CreateObject("WScript.Shell")
-WshShell.Popup tMessage, 0, "Hardware Information | by Abdullah ERTÜRK", 4096
+WshShell.Popup tMessage, 0, "Hardware Information | by Abdullah ERTÃœRK", 4096
