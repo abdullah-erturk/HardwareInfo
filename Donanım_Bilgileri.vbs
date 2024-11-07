@@ -134,23 +134,23 @@ For Each System in SystemSet
         For Each bbType In colMB
             MbVendor = bbType.Manufacturer
             MbModel = bbType.Product
-            tMessage = "Ýþletim Sistemi		: " & System.Caption & vbNewLine & _
-                       "Ýþletim Sistemi Versiyonu	: " & System.Version & vbNewLine & _
-                       "Windows Mimari Yapýsý	: " & strOSArch & vbNewLine & _
-                       "Kullanýcý Adý		: " & objNetwork.UserName & vbNewLine & _
-                       "Bilgisayar Adý		: " & strComputerName & vbNewLine & _
+            tMessage = "İşletim Sistemi		: " & System.Caption & vbNewLine & _
+                       "İşletim Sistemi Versiyonu	: " & System.Version & vbNewLine & _
+                       "Windows Mimari Yapısı	: " & strOSArch & vbNewLine & _
+                       "Kullanıcı Adı		: " & objNetwork.UserName & vbNewLine & _
+                       "Bilgisayar Adı		: " & strComputerName & vbNewLine & _
                        "Son Format Tarihi		: " & fthx & vbNewLine & _
                        "--------------------------------------------------------------------------------------" & vbNewLine & _
                        "Anakart Üreticisi		: " & MbVendor & vbNewLine & _
                        "Anakart Modeli		: " & MbModel & vbNewLine & _
-                       "Ýþlemci			: " & objProcessor.Manufacturer & vbNewLine & _
-                       "Ýþlemci Modeli		: " & objProcessor.Name & vbNewLine & _
+                       "İşlemci			: " & objProcessor.Manufacturer & vbNewLine & _
+                       "İşlemci Modeli		: " & objProcessor.Name & vbNewLine & _
                        "CPU Mimarisi		: " & strArchitecture & vbNewLine & _
                        "Toplam RAM		: " & FormatNumber(TotalRam / 1024, 2) & " GB" & vbNewLine & _
-                       "RAM Yuvalarý		: " & vbNewLine & ramDetails & vbNewLine & _
-                       "Grafik Kart(lar)ý		: " & vbNewLine & tStr & _
+                       "RAM Yuvaları		: " & vbNewLine & ramDetails & vbNewLine & _
+                       "Grafik Kart(lar)ı		: " & vbNewLine & tStr & _
                        "--------------------------------------------------------------------------------------" & vbNewLine & _
-                       "Að Kart(lar)ý ve IP Adres(ler)i	:" & vbNewLine & vbNewLine & myIPAddresses & _
+                       "Ağ Kart(lar)ı ve IP Adres(ler)i	:" & vbNewLine & vbNewLine & myIPAddresses & _
                        "--------------------------------------------------------------------------------------" & vbNewLine & _
                        diskInfo
             Exit For ' Bu döngüyü her bölüm için yalnızca bir kez çalıştırın
@@ -162,4 +162,4 @@ Next
 
 ' WshShell.Popup ile görüntüle
 Set WshShell = CreateObject("WScript.Shell")
-WshShell.Popup tMessage, 0, "Donaným Bilgileri | by Abdullah ERTÜRK", 4096
+WshShell.Popup tMessage, 0, "Donanım Bilgileri | by Abdullah ERTÜRK", 4096
