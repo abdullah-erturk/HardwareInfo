@@ -22,11 +22,25 @@ i = 1
 For Each obj2 In obj
     memTmp1 = obj2.capacity / 1024 / 1024
     TotalRam = TotalRam + memTmp1
-    ramDetails = ramDetails & "Slot " & i & ": " & FormatNumber(memTmp1 / 1024, 2) & " GB, Hız: " & obj2.Speed & " MHz" & vbCrLf
+    ramSpeed = obj2.Speed
+    ramType = ""
+
+    ' RAM tÃ¼rÃ¼nÃ¼ belirleme (DDR genellikle hÄ±zla iliÅŸkilendirilir)
+    If ramSpeed >= 1600 And ramSpeed < 2133 Then
+        ramType = "DDR3"
+    ElseIf ramSpeed >= 2133 And ramSpeed < 2933 Then
+        ramType = "DDR4"
+    ElseIf ramSpeed >= 2933 Then
+        ramType = "DDR5"
+    Else
+        ramType = "Unknown"
+    End If
+
+    ramDetails = ramDetails & "Slot " & i & ": " & FormatNumber(memTmp1 / 1024, 2) & " GB, HÄ±z: " & obj2.Speed & " MHz, TÃ¼r: " & ramType & vbCrLf
     i = i + 1
 Next
 
-' İşlemci mimarisi belirleme
+' Ä°ÅŸlemci mimarisi belirleme
 Set colItems = objWMIService.ExecQuery("Select Architecture from Win32_Processor")
 For Each objItem in colItems
     If objItem.Architecture = 0 Then
@@ -36,7 +50,7 @@ For Each objItem in colItems
     End If
 Next
 
-' Grafik kartı bilgisi
+' Grafik kartÄ± bilgisi
 On Error Resume Next
 Set colItemsx = objWMIService.ExecQuery("SELECT * FROM Win32_VideoController")
 Dim tStr, tStr2
@@ -45,10 +59,10 @@ tStr2 = ""
 
 For Each objItem in colItemsx
     tStr = tStr & objItem.Description & " " & "Ram " & FormatNumber(objItem.AdapterRAM / 1024 / 1024, 0) & " MB" & vbCrLf
-    tStr2 = tStr2 & objItem.Description & " " & "Sürücü versiyonu: " & objItem.DriverVersion & vbCrLf
+    tStr2 = tStr2 & objItem.Description & " " & "SÃ¼rÃ¼cÃ¼ versiyonu: " & objItem.DriverVersion & vbCrLf
 Next
 
-' İşletim sistemi bilgisi
+' Ä°ÅŸletim sistemi bilgisi
 Set dtmInstallDate = CreateObject("WbemScripting.SWbemDateTime")
 Set colOperatingSystems = objWMIService.ExecQuery("Select * from Win32_OperatingSystem")
 For Each objOperatingSystem in colOperatingSystems
@@ -63,20 +77,20 @@ End Function
 
 ' Disk bilgileri
 Dim diskInfo
-diskInfo = "Disk Özeti	:" & vbCrLf
+diskInfo = "Disk Ã–zeti	:" & vbCrLf
 
-' Disk bilgilerini al ve türlerini kontrol et
+' Disk bilgilerini al ve tÃ¼rlerini kontrol et
 For Each objDrive In colDrives
     If objDrive.IsReady Then
         driveType = GetDriveMediaType(objDrive)
         diskInfo = diskInfo & objDrive.DeviceID & " - " & driveType & " - Kapasite: " & _
                    FormatNumber(objDrive.Size / 1024 / 1024 / 1024, 2) & " GB" & vbCrLf
     Else
-        diskInfo = diskInfo & objDrive.DeviceID & " - " & "Disk hazır değil" & vbCrLf
+        diskInfo = diskInfo & objDrive.DeviceID & " - " & "Disk hazÄ±r deÄŸil" & vbCrLf
     End If
 Next
 
-' Disk türünü belirleme fonksiyonu (HDD/SSD/USB)
+' Disk tÃ¼rÃ¼nÃ¼ belirleme fonksiyonu (HDD/SSD/USB)
 Function GetDriveMediaType(DiskDrive)
     If InStr(1, LCase(DiskDrive.Model), "ssd") > 0 Or InStr(1, LCase(DiskDrive.Model), "sd") > 0 Then
         GetDriveMediaType = "SSD"
@@ -87,14 +101,14 @@ Function GetDriveMediaType(DiskDrive)
     End If
 End Function
 
-' Ağ bilgileri
+' AÄŸ bilgileri
 Dim myIPAddresses : myIPAddresses = ""
 Dim counter : counter = 1
 Dim colAdapters : Set colAdapters = objWMIService.ExecQuery("Select IPAddress, Description, MACAddress from Win32_NetworkAdapterConfiguration Where IPEnabled = True")
 
 For Each objAdapter in colAdapters
   If Not IsNull(objAdapter.IPAddress) Then
-    myIPAddresses = myIPAddresses & "Ağ Kartı " & counter & ":" & vbCrLf & _
+    myIPAddresses = myIPAddresses & "AÄŸ KartÄ± " & counter & ":" & vbCrLf & _
                     objAdapter.Description & " : " & vbCrLf & _
                     "IP Adresi: " & Trim(objAdapter.IPAddress(0)) & vbCrLf & _
                     "MAC Adresi: " & objAdapter.MACAddress & vbCrLf & _
@@ -103,7 +117,7 @@ For Each objAdapter in colAdapters
   End If
 Next
 
-' WAN IP adresini almak için dış bir web servisi kullan
+' WAN IP adresini almak iÃ§in dÄ±ÅŸ bir web servisi kullan
 Dim objXMLHttp
 Set objXMLHttp = CreateObject("MSXML2.XMLHTTP")
 objXMLHttp.Open "GET", "http://api.ipify.org", False
@@ -114,38 +128,38 @@ WANIP = objXMLHttp.responseText
 
 myIPAddresses = myIPAddresses & "WAN IP Adresi: " & WANIP & vbCrLf
 
-' Bilgileri derle (Sistem, İşlemci ve Anakart için yalnızca bir döngü)
+' Bilgileri derle (Sistem, Ä°ÅŸlemci ve Anakart iÃ§in yalnÄ±zca bir dÃ¶ngÃ¼)
 For Each System in SystemSet
     For Each objProcessor in colProcessors
         For Each bbType In colMB
             MbVendor = bbType.Manufacturer
             MbModel = bbType.Product
-            tMessage = "İşletim Sistemi		: " & System.Caption & vbNewLine & _
-                       "İşletim Sistemi Versiyonu	: " & System.Version & vbNewLine & _
-                       "Windows Mimari Yapısı	: " & strOSArch & vbNewLine & _
-                       "Kullanıcı Adı		: " & objNetwork.UserName & vbNewLine & _
-                       "Bilgisayar Adı		: " & strComputerName & vbNewLine & _
+            tMessage = "ÃÃ¾letim Sistemi		: " & System.Caption & vbNewLine & _
+                       "ÃÃ¾letim Sistemi Versiyonu	: " & System.Version & vbNewLine & _
+                       "Windows Mimari YapÃ½sÃ½	: " & strOSArch & vbNewLine & _
+                       "KullanÃ½cÃ½ AdÃ½		: " & objNetwork.UserName & vbNewLine & _
+                       "Bilgisayar AdÃ½		: " & strComputerName & vbNewLine & _
                        "Son Format Tarihi		: " & fthx & vbNewLine & _
                        "--------------------------------------------------------------------------------------" & vbNewLine & _
-                       "Anakart Üreticisi		: " & MbVendor & vbNewLine & _
+                       "Anakart Ãœreticisi		: " & MbVendor & vbNewLine & _
                        "Anakart Modeli		: " & MbModel & vbNewLine & _
-                       "İşlemci			: " & objProcessor.Manufacturer & vbNewLine & _
-                       "İşlemci Modeli		: " & objProcessor.Name & vbNewLine & _
+                       "ÃÃ¾lemci			: " & objProcessor.Manufacturer & vbNewLine & _
+                       "ÃÃ¾lemci Modeli		: " & objProcessor.Name & vbNewLine & _
                        "CPU Mimarisi		: " & strArchitecture & vbNewLine & _
                        "Toplam RAM		: " & FormatNumber(TotalRam / 1024, 2) & " GB" & vbNewLine & _
-                       "RAM Yuvaları		: " & vbNewLine & ramDetails & vbNewLine & _
-                       "Grafik Kart(lar)ı		: " & vbNewLine & tStr & _
+                       "RAM YuvalarÃ½		: " & vbNewLine & ramDetails & vbNewLine & _
+                       "Grafik Kart(lar)Ã½		: " & vbNewLine & tStr & _
                        "--------------------------------------------------------------------------------------" & vbNewLine & _
-                       "Ağ Kart(lar)ı ve IP Adres(ler)i	:" & vbNewLine & vbNewLine & myIPAddresses & _
+                       "AÃ° Kart(lar)Ã½ ve IP Adres(ler)i	:" & vbNewLine & vbNewLine & myIPAddresses & _
                        "--------------------------------------------------------------------------------------" & vbNewLine & _
                        diskInfo
-            Exit For ' Bu döngüyü her bölüm için yalnızca bir kez çalıştırın
+            Exit For ' Bu dÃ¶ngÃ¼yÃ¼ her bÃ¶lÃ¼m iÃ§in yalnÄ±zca bir kez Ã§alÄ±ÅŸtÄ±rÄ±n
         Next
         Exit For
     Next
     Exit For
 Next
 
-' WshShell.Popup ile görüntüle
+' WshShell.Popup ile gÃ¶rÃ¼ntÃ¼le
 Set WshShell = CreateObject("WScript.Shell")
-WshShell.Popup tMessage, 0, "Donanım Bilgileri | by Abdullah ERTÜRK", 4096
+WshShell.Popup tMessage, 0, "DonanÃ½m Bilgileri | by Abdullah ERTÃœRK", 4096
