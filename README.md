@@ -28,6 +28,7 @@ Bu projeye katkı sağlamak isterseniz, pull request gönderebilir veya issues s
 ### Direct Download Link:
 https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Hardware_Info.vbs
 
+
 ## Hardware Info  
 VBScript file displays a summary of all your hardware information using only the built-in Windows system codes, without the need for third-party programs. The script collects information about various system components and presents it visually to the user. Below are the main data provided by the script:
 
