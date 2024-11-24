@@ -21,7 +21,7 @@ VBScript betik dosyası,  3. parti programlara gerek kalmadan Windows işletim s
 - **İşlemci Bilgisi**: İşlemci modeli, üreticisi ve mimarisi hakkında detaylı bilgiler sunar.
 - **RAM Bilgisi**: RAM kapasitesi, yuvada kullanılan modüller ve hız bilgileri.
 - **Grafik Kartı Bilgisi**: Grafik kartının markası, RAM kapasitesi ve sürücü versiyonunu içerir.
-- **Ağ Kartı ve IP Adresi Bilgisi**: Ağ kartı bilgileri, yerel IP adresleri, DNS ve DHCP Sunucu bilgilerini ve WAN IP adresini gösterir.
+- **Ağ Kartı ve IP Adresi Bilgisi**: Ağ kartı bilgilerini, yerel IP adreslerini, DNS ve DHCP Sunucu bilgilerini ve WAN IP adresini gösterir.
 - **Disk Bilgisi**: HDD, SSD veya USB gibi disk türlerini ve kapasite bilgilerini sunar.
 
 ### Katkı Sağlama:
