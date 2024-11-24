@@ -1,5 +1,4 @@
-Set SystemSet = GetObject("winmgmts:").InstancesOf("Win32_OperatingSystem")
-strOSArch = GetObject("winmgmts:root\cimv2:Win32_OperatingSystem=@").OSArchitecture
+Set objWMIService = GetObject("winmgmts:\\.\root\CIMV2") ' Kullanıcıya daha uyumlu WMI bağlantısı
 Set objNetwork = CreateObject("Wscript.Network")
 Set wshShell = CreateObject("WScript.Shell")
 strComputerName = wshShell.ExpandEnvironmentStrings("%COMPUTERNAME%")
@@ -8,13 +7,13 @@ proc_arch = oShell.ExpandEnvironmentStrings("%PROCESSOR_ARCHITECTURE%")
 Set oEnv = oShell.Environment("SYSTEM")
 
 strComputer = "."
-Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
+Set objWMIService = GetObject("winmgmts:\\.\root\CIMV2")
 Set colMB = objWMIService.ExecQuery("Select * from Win32_BaseBoard")
 Set colProcessors = objWMIService.ExecQuery("Select * from Win32_Processor")
 Set colDrives = objWMIService.ExecQuery("Select * from Win32_DiskDrive")
 
 ' Toplam RAM hesaplama
-Set obj = GetObject("winmgmts:").InstancesOf("Win32_PhysicalMemory")
+Set obj = objWMIService.ExecQuery("Select * from Win32_PhysicalMemory")
 TotalRam = 0
 ramDetails = ""
 i = 1
@@ -25,7 +24,6 @@ For Each obj2 In obj
     ramSpeed = obj2.Speed
     ramType = ""
 
-    ' RAM t�r�n� belirleme (DDR genellikle h�zla ili�kilendirilir)
     If ramSpeed >= 1600 And ramSpeed < 2133 Then
         ramType = "DDR3"
     ElseIf ramSpeed >= 2133 And ramSpeed < 2933 Then
@@ -36,11 +34,11 @@ For Each obj2 In obj
         ramType = "Unknown"
     End If
 
-    ramDetails = ramDetails & "Slot " & i & ": " & FormatNumber(memTmp1 / 1024, 2) & " GB, H�z: " & obj2.Speed & " MHz, T�r: " & ramType & vbCrLf
+    ramDetails = ramDetails & "Slot " & i & ": " & Int(memTmp1 / 1024) & " GB, Hız: " & obj2.Speed & " MHz, Tür: " & ramType & vbCrLf
     i = i + 1
 Next
 
-' ��lemci mimarisi belirleme
+' İşlemci mimarisi
 Set colItems = objWMIService.ExecQuery("Select Architecture from Win32_Processor")
 For Each objItem in colItems
     If objItem.Architecture = 0 Then
@@ -50,19 +48,147 @@ For Each objItem in colItems
     End If
 Next
 
-' Grafik kart� bilgisi
+' Grafik Kartı bilgisi
 On Error Resume Next
 Set colItemsx = objWMIService.ExecQuery("SELECT * FROM Win32_VideoController")
 Dim tStr, tStr2
 tStr = ""
 tStr2 = ""
 
+' Ekran kartı bilgilerini al
 For Each objItem in colItemsx
-    tStr = tStr & objItem.Description & " " & "Ram " & FormatNumber(objItem.AdapterRAM / 1024 / 1024, 0) & " MB" & vbCrLf
-    tStr2 = tStr2 & objItem.Description & " " & "S�r�c� versiyonu: " & objItem.DriverVersion & vbCrLf
+    tStr = tStr & "Modeli    : " & objItem.Description & vbCrLf
+    
+    ' Bellek miktarını al
+    Dim memSize
+    memSize = objItem.AdapterRAM / 1024 / 1024 ' MB cinsinden
+
+    ' Bellek miktarını kontrol et
+    If InStr(LCase(objItem.Description), "intel") > 0 Then
+        ' Dahili ekran kartı ise, bellek miktarını sistem RAM'inden dinamik olarak alabiliriz
+        If memSize < 128 Then
+            memSize = 128 ' Dahili ekran kartı için varsayılan bellek miktarı 128 MB
+        End If
+    Else
+        ' Harici ekran kartı ise, AdapterRAM değerini kontrol et
+        If memSize < 1024 Then
+            ' Bellek 1 GB'den küçükse, muhtemelen yanlış bir değer döndürülüyor
+            memSize = 4096 ' Harici ekran kartı için varsayılan bellek miktarı 4096 MB (4 GB)
+        End If
+    End If
+
+    ' Bellek bilgisi hatalı gösteriyor, bu sebeple yorum satırı :) 
+    ' tStr = tStr & "Bellek    	: " & memSize & " MB" & vbCrLf
+Next
+On Error GoTo 0
+
+' Ağ kartı bilgilerini al
+Dim myIPAddresses : myIPAddresses = ""
+Dim counter : counter = 1
+Dim colAdapters : Set colAdapters = objWMIService.ExecQuery("Select IPAddress, Description, MACAddress, DHCPServer from Win32_NetworkAdapterConfiguration")
+
+For Each objAdapter in colAdapters
+    description = objAdapter.Description
+    macAddr = objAdapter.MACAddress
+
+    If InStr(description, "WAN Miniport") = 0 And InStr(description, "Microsoft") = 0 Then
+        If Not IsNull(objAdapter.IPAddress) Then
+            ipAddr = objAdapter.IPAddress(0)
+        Else
+            ipAddr = "Bulunamadı"
+        End If
+
+        If Not IsNull(objAdapter.DHCPServer) Then
+            dhcpServer = objAdapter.DHCPServer
+        Else
+            dhcpServer = "Bulunamadı"
+        End If
+
+        myIPAddresses = myIPAddresses & "Ağ Kartı " & counter & "" & vbCrLf & _
+                        "Açıklama		: " & description & vbCrLf & _
+                        "MAC Adresi	: " & macAddr & vbCrLf & _
+                        "IP Adresi		: " & ipAddr & vbCrLf & _
+                        "DHCP Sunucu	: " & dhcpServer & vbCrLf & vbCrLf
+
+        counter = counter + 1
+    End If
 Next
 
-' ��letim sistemi bilgisi
+' WAN IP almak için dış web servisini kullan
+Dim WANIP
+On Error Resume Next ' Hata kontrolü
+Dim objXMLHttp
+Set objXMLHttp = CreateObject("MSXML2.XMLHTTP")
+objXMLHttp.Open "GET", "http://api.ipify.org", False
+objXMLHttp.Send
+
+' İnternet bağlantısı kontrolü
+If Err.Number <> 0 Then
+    WANIP = "Bulunamadı" ' İnternet yoksa WAN IP'yi "Bulunamadı" olarak ayarla
+Else
+    WANIP = objXMLHttp.responseText ' İnternet bağlantısı varsa WAN IP'yi al
+End If
+On Error GoTo 0 ' Hata kontrolünü sıfırla
+
+' Ping ile internet bağlantısını kontrol et
+Dim pingResult
+pingResult = PingHost("8.8.8.8")
+
+If pingResult Then
+    ' 8.8.8.8'e ping gidiyorsa WAN IP'yi göster
+    If WANIP = "Bulunamadı" Then
+        WANIP = objXMLHttp.responseText ' Gerçek WAN IP'yi al
+    End If
+Else
+    ' Eğer 8.8.8.8'e ping gitmiyorsa, WAN IP olarak "Bulunamadı" yaz
+    WANIP = "Bulunamadı"
+End If
+
+myIPAddresses = myIPAddresses & "WAN IP Adresi	: " & WANIP & vbCrLf
+
+' DNS sunucu adreslerini ekle
+Set colNicConfigs = objWMIService.ExecQuery("Select * from Win32_NetworkAdapterConfiguration Where IPEnabled = True")
+Dim dnsFound
+dnsFound = False ' DNS bulunup bulunmadığını takip etmek için
+
+For Each objNicConfig In colNicConfigs
+    If Not IsNull(objNicConfig.DNSServerSearchOrder) Then
+        myIPAddresses = myIPAddresses & "DNS Sunucu	: " 
+        Dim dnsList
+        dnsList = ""
+        
+        For Each dnsServer In objNicConfig.DNSServerSearchOrder
+            If dnsList = "" Then
+                dnsList = dnsServer ' İlk DNS sunucusu
+            Else
+                dnsList = dnsList & " / " & dnsServer ' Sonraki DNS sunucuları arasına "/" ekle
+            End If
+        Next
+        
+        myIPAddresses = myIPAddresses & dnsList & vbCrLf
+        dnsFound = True ' DNS bulunduğu için işaretle
+        Exit For
+    End If
+Next
+
+If Not dnsFound Then
+    myIPAddresses = myIPAddresses & "DNS Sunucu	: Bulunamadı" & vbCrLf
+End If
+
+' Ping fonksiyonu
+Function PingHost(host)
+    Dim objShell, command, result
+    Set objShell = CreateObject("WScript.Shell")
+    command = "ping -n 1 " & host ' "-n 1" parametresi tek bir ping isteği gönderir
+    result = objShell.Run(command, 0, True) ' Komutu çalıştır ve sonucu al
+    If result = 0 Then
+        PingHost = True ' Ping başarılı
+    Else
+        PingHost = False ' Ping başarısız
+    End If
+End Function
+
+' İşletim sistemi bilgisi
 Set dtmInstallDate = CreateObject("WbemScripting.SWbemDateTime")
 Set colOperatingSystems = objWMIService.ExecQuery("Select * from Win32_OperatingSystem")
 For Each objOperatingSystem in colOperatingSystems
@@ -75,91 +201,100 @@ Function getmydat(wmitime)
     getmydat = dtmInstallDate.GetVarDate
 End Function
 
-' Disk bilgileri
+
+' Disk bilgilerini al ve türlerini kontrol et
 Dim diskInfo
-diskInfo = "Disk �zeti	:" & vbCrLf
+diskInfo = "Disk Özeti  :" & vbCrLf
 
-' Disk bilgilerini al ve t�rlerini kontrol et
-For Each objDrive In colDrives
-    If objDrive.IsReady Then
-        driveType = GetDriveMediaType(objDrive)
-        diskInfo = diskInfo & objDrive.DeviceID & " - " & driveType & " - Kapasite: " & _
-                   FormatNumber(objDrive.Size / 1024 / 1024 / 1024, 2) & " GB" & vbCrLf
-    Else
-        diskInfo = diskInfo & objDrive.DeviceID & " - " & "Disk haz�r de�il" & vbCrLf
-    End If
-Next
+' Eğer colDrives boş değilse işleme başla
+If colDrives.Count > 0 Then
+    For Each objDrive In colDrives
+        If Not objDrive Is Nothing Then
+            ' Diskin hazır olup olmadığını kontrol et
+            On Error Resume Next ' Hataları geçici olarak yoksay
+            Dim driveType, diskSize
+            ' Disk boyutunu almayı deneyelim
+            diskSize = objDrive.Size
+            If Err.Number = 0 Then
+                ' Boyut verisi mevcutsa
+                If objDrive.IsReady Then
+                    driveType = GetDriveMediaType(objDrive)
+                    diskInfo = diskInfo & objDrive.DeviceID & " - " & driveType & " - Kapasite: " & _
+                               FormatNumber(diskSize / 1024 / 1024 / 1024, 2) & " GB" & vbCrLf
+                Else
+                    diskInfo = diskInfo & objDrive.DeviceID & " - " & "Disk hazır değil" & vbCrLf
+                End If
+            Else
+                diskInfo = diskInfo & objDrive.DeviceID & " - " & "Disk boyutu alınamıyor" & vbCrLf
+            End If
+            On Error GoTo 0 ' Hata kontrolünü sıfırla
+        End If
+    Next
+Else
+    diskInfo = diskInfo & "Disk bilgisi bulunamadı." & vbCrLf
+End If
 
-' Disk t�r�n� belirleme fonksiyonu (HDD/SSD/USB)
+' Disk türünü belirleme fonksiyonu (HDD/SSD/NVMe/USB)
 Function GetDriveMediaType(DiskDrive)
-    If InStr(1, LCase(DiskDrive.Model), "ssd") > 0 Or InStr(1, LCase(DiskDrive.Model), "sd") > 0 Then
-        GetDriveMediaType = "SSD"
-    ElseIf InStr(1, LCase(DiskDrive.InterfaceType), "usb") > 0 Then
-        GetDriveMediaType = "USB"
+    On Error Resume Next
+    Dim mediaType
+    If Not DiskDrive Is Nothing Then
+        ' NVMe diskleri model adı üzerinden tanıyacağız
+        If InStr(1, LCase(DiskDrive.Model), "nvme") > 0 Or InStr(1, LCase(DiskDrive.Model), "nvm") > 0 Then
+            mediaType = "NVMe"
+        ' SSD'yi model adında "ssd" veya "sd" geçiyorsa tanıyacağız
+        ElseIf InStr(1, LCase(DiskDrive.Model), "ssd") > 0 Or InStr(1, LCase(DiskDrive.Model), "sd") > 0 Then
+            mediaType = "SSD"
+        ' USB diskleri model adında "usb" geçiyorsa tanıyacağız
+        ElseIf InStr(1, LCase(DiskDrive.InterfaceType), "usb") > 0 Then
+            mediaType = "USB"
+        ' Diğer diskler için HDD
+        Else
+            mediaType = "HDD"
+        End If
     Else
-        GetDriveMediaType = "HDD"
+        mediaType = "Bilinmiyor"
     End If
+    On Error GoTo 0
+    GetDriveMediaType = mediaType
 End Function
 
-' A� bilgileri
-Dim myIPAddresses : myIPAddresses = ""
-Dim counter : counter = 1
-Dim colAdapters : Set colAdapters = objWMIService.ExecQuery("Select IPAddress, Description, MACAddress from Win32_NetworkAdapterConfiguration Where IPEnabled = True")
+' SystemSet koleksiyonunu alalım
+Set SystemSet = objWMIService.ExecQuery("SELECT * FROM Win32_OperatingSystem")
 
-For Each objAdapter in colAdapters
-  If Not IsNull(objAdapter.IPAddress) Then
-    myIPAddresses = myIPAddresses & "A� Kart� " & counter & ":" & vbCrLf & _
-                    objAdapter.Description & " : " & vbCrLf & _
-                    "IP Adresi: " & Trim(objAdapter.IPAddress(0)) & vbCrLf & _
-                    "MAC Adresi: " & objAdapter.MACAddress & vbCrLf & _
-                    "" & vbCrLf
-    counter = counter + 1
-  End If
-Next
-
-' WAN IP adresini almak i�in d�� bir web servisi kullan
-Dim objXMLHttp
-Set objXMLHttp = CreateObject("MSXML2.XMLHTTP")
-objXMLHttp.Open "GET", "http://api.ipify.org", False
-objXMLHttp.Send
-
-Dim WANIP
-WANIP = objXMLHttp.responseText
-
-myIPAddresses = myIPAddresses & "WAN IP Adresi: " & WANIP & vbCrLf
-
-' Bilgileri derle (Sistem, ��lemci ve Anakart i�in yaln�zca bir d�ng�)
+' Bilgileri derle (Sistem, İşlemci ve Anakart için yalnızca bir döngü)
 For Each System in SystemSet
     For Each objProcessor in colProcessors
         For Each bbType In colMB
             MbVendor = bbType.Manufacturer
             MbModel = bbType.Product
-            tMessage = "��letim Sistemi		: " & System.Caption & vbNewLine & _
-                       "��letim Sistemi Versiyonu	: " & System.Version & vbNewLine & _
-                       "Windows Mimari Yap�s�	: " & strOSArch & vbNewLine & _
-                       "Kullan�c� Ad�		: " & objNetwork.UserName & vbNewLine & _
-                       "Bilgisayar Ad�		: " & strComputerName & vbNewLine & _
+            tMessage = "İşletim Sistemi		: " & System.Caption & vbNewLine & _
+                       "İşletim Sistemi Versiyonu	: " & System.Version & vbNewLine & _
+                       "Windows Mimari Yapısı	: " & strArchitecture & vbNewLine & _
+                       "Kullanıcı Adı		: " & objNetwork.UserName & vbNewLine & _
+                       "Bilgisayar Adı		: " & strComputerName & vbNewLine & _
                        "Son Format Tarihi		: " & fthx & vbNewLine & _
                        "--------------------------------------------------------------------------------------" & vbNewLine & _
-                       "Anakart �reticisi		: " & MbVendor & vbNewLine & _
+                       "Anakart Üreticisi		: " & MbVendor & vbNewLine & _
                        "Anakart Modeli		: " & MbModel & vbNewLine & _
-                       "��lemci			: " & objProcessor.Manufacturer & vbNewLine & _
-                       "��lemci Modeli		: " & objProcessor.Name & vbNewLine & _
+                       "İşlemci			: " & objProcessor.Manufacturer & vbNewLine & _
+                       "İşlemci Modeli		: " & objProcessor.Name & vbNewLine & _
                        "CPU Mimarisi		: " & strArchitecture & vbNewLine & _
-                       "Toplam RAM		: " & FormatNumber(TotalRam / 1024, 2) & " GB" & vbNewLine & _
-                       "RAM Yuvalar�		: " & vbNewLine & ramDetails & vbNewLine & _
-                       "Grafik Kart(lar)�		: " & vbNewLine & tStr & _
+                       "Toplam RAM		: " & Int(TotalRam / 1024) & " GB" & vbNewLine & _
+                       "RAM Yuvaları		: " & vbNewLine & ramDetails & vbNewLine & _
+                       "Grafik Kart(lar)ı 		: " & vbNewLine & tStr & _
                        "--------------------------------------------------------------------------------------" & vbNewLine & _
-                       "A� Kart(lar)� ve IP Adres(ler)i	:" & vbNewLine & vbNewLine & myIPAddresses & _
+                       "Ağ Kart(lar)ı ve IP Adres(ler)i	:" & vbNewLine & vbNewLine & myIPAddresses & _
                        "--------------------------------------------------------------------------------------" & vbNewLine & _
                        diskInfo
-            Exit For ' Bu d�ng�y� her b�l�m i�in yaln�zca bir kez �al��t�r�n
+
+            Exit For ' Bu döngüyü her bölüm için yalnızca bir kez çalıştırın
         Next
         Exit For
     Next
     Exit For
 Next
 
-' WshShell.Popup ile g�r�nt�le
+' WshShell.Popup ile görüntüle
 Set WshShell = CreateObject("WScript.Shell")
-WshShell.Popup tMessage, 0, "Donan�m Bilgileri | by Abdullah ERT�RK", 4096
+WshShell.Popup tMessage, 0, "Donanım Bilgileri | by Abdullah ERTÜRK", 4096
