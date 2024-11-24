@@ -21,7 +21,7 @@ VBScript betik dosyası,  3. parti programlara gerek kalmadan Windows işletim s
 - **İşlemci Bilgisi**: İşlemci modeli, üreticisi ve mimarisi hakkında detaylı bilgiler sunar.
 - **RAM Bilgisi**: RAM kapasitesi, yuvada kullanılan modüller ve hız bilgileri.
 - **Grafik Kartı Bilgisi**: Grafik kartının markası, RAM kapasitesi ve sürücü versiyonunu içerir.
-- **Ağ Kartı ve IP Adresi Bilgisi**: Ağ kartı bilgileri, yerel IP adresleri ve WAN IP adresini gösterir.
+- **Ağ Kartı ve IP Adresi Bilgisi**: Ağ kartı bilgileri, yerel IP adresleri, DNS ve DHCP Sunucu bilgilerini ve WAN IP adresini gösterir.
 - **Disk Bilgisi**: HDD, SSD veya USB gibi disk türlerini ve kapasite bilgilerini sunar.
 
 ### Katkı Sağlama:
@@ -39,7 +39,7 @@ VBScript file displays a summary of all your hardware information using only the
 - **Processor Information**: Offers detailed information about the processor model, manufacturer, and architecture.
 - **RAM Information**: Displays the RAM capacity, modules used in the slots, and speed information.
 - **Graphics Card Information**: Includes the graphics card brand, RAM capacity, and driver version.
-- **Network Adapter and IP Address Information**: Shows network adapter details, local IP addresses, and WAN IP address.
+- **Network Adapter and IP Address Information**: Shows network card information, local IP addresses, DNS and DHCP Server information and WAN IP address.
 - **Disk Information**: Displays disk types (HDD, SSD, or USB) and their capacity information.
 
 ### Contributing:
