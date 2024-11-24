@@ -1,10 +1,10 @@
 # Hardware Info
 
 ### English Direct Download Link:
-https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Hardware_Info.vbs
+https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Hardware_Info.zip
 
 ### Türkçe Direkt İndirme Linki:
-https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Donan%C4%B1m_Bilgileri.vbs
+https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Donan%C4%B1m_Bilgileri.zip
 
 ![sample](https://github.com/abdullah-erturk/HardwareInfo/blob/main/preview.jpg)
 
