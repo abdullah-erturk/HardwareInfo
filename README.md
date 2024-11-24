@@ -6,6 +6,8 @@ https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Hardware_Inf
 ### Türkçe Direkt İndirme Linki:
 https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Donan%C4%B1m_Bilgileri.zip
 
+Türkçe dil desteği olan betik dosyası indirildiğinde karakter bozulması yaşamamak için zip dosyasını indirmeniz tavsiye edilir.
+
 ![sample](https://github.com/abdullah-erturk/HardwareInfo/blob/main/preview.png)
 
      Türkçe Açıklama
