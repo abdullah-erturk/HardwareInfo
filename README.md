@@ -1,3 +1,5 @@
+https://buymeacoffee.com/abdullaherturk
+
 # Hardware Info
 
 ### English Direct Download Link:
