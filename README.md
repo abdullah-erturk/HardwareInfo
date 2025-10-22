@@ -14,7 +14,7 @@ Türkçe dil desteği olan betik dosyası indirildiğinde karakter bozulması ya
 
      Türkçe Açıklama
 
-### vbscript ve powershell ve versiyonu:
+### vbscript ve powershell versiyonu:
 zip arşiv dosya içeriğinde vbscript versiyonu vardır. Powershell versiyonu ise .bat uzantılı olan dosyadır
 
 .bat uzantılı dosyanın içeriği aslında PowerShell kodudur, ancak PowerShell kodunun CMD'den çalıştırılmasına olanak tanıyan özel bir kod eklenmiştir. Bu nedenle .bat uzantısına sahiptir.
