@@ -2,13 +2,13 @@
 
 # Hardware Info
 
-### English Direct Download Link:
+### English vbscript file direct download Link:
 https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Hardware_Info.zip
 
-### Türkçe Direkt İndirme Linki:
+### Türkçe vbscript betik dosyası direkt indirme Linki:
 https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Donan%C4%B1m_Bilgileri.zip
 
-Türkçe dil desteği olan betik dosyası indirildiğinde karakter bozulması yaşamamak için zip dosyasını indirmeniz tavsiye edilir.
+Türkçe dil desteği olan vbscript betik dosyası indirildiğinde karakter bozulması yaşamamak için zip dosyasını indirmeniz tavsiye edilir.
 
 ![sample](https://github.com/abdullah-erturk/HardwareInfo/blob/main/preview.png)
 
