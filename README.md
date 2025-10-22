@@ -1,14 +1,12 @@
 <a href="https://buymeacoffee.com/abdullaherturk" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
-# Hardware Info
+# Donanım Bilgisi
 
-### English vbscript file direct download Link:
-https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Hardware_Info.zip
-
-### Türkçe vbscript betik dosyası direkt indirme Linki:
+### Türkçe vbscript versiyon betik dosyası direkt indirme linki:
 https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Donan%C4%B1m_Bilgileri.zip
 
-Türkçe dil desteği olan vbscript betik dosyası indirildiğinde karakter bozulması yaşamamak için zip dosyasını indirmeniz tavsiye edilir.
+### Türkçe powershell versiyon betik dosyası direkt indirme linki:
+https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Donan%C4%B1m_Bilgileri_TR.bat
 
 ![sample](https://github.com/abdullah-erturk/HardwareInfo/blob/main/preview.png)
 
@@ -38,6 +36,14 @@ Bu projeye katkı sağlamak isterseniz, pull request gönderebilir veya issues s
 
 
      English Explanation
+
+# Hardware Info
+
+### English vbscript version file direct download link:
+https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Hardware_Info.zip
+
+### English powershell version file direct download link:
+https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Hardware_Info_EN.bat
 
 ### vbscript and powershell version:
 The .zip archive contains the vbScript version. The PowerShell version has a .bat extension.
