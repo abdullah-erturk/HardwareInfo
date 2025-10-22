@@ -1,5 +1,8 @@
 <a href="https://buymeacoffee.com/abdullaherturk" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
+
+![sample](https://github.com/abdullah-erturk/HardwareInfo/blob/main/preview.png)
+
 # Donanım Bilgisi
 
 ### Türkçe vbscript versiyon betik dosyası direkt indirme linki:
@@ -7,8 +10,6 @@ https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Donan%C4%B1m
 
 ### Türkçe powershell versiyon betik dosyası direkt indirme linki:
 https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Donan%C4%B1m_Bilgileri_TR.bat
-
-![sample](https://github.com/abdullah-erturk/HardwareInfo/blob/main/preview.png)
 
 <details>
 <summary><strong>Türkçe Tanıtım</strong></summary>
