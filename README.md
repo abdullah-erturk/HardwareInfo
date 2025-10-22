@@ -39,7 +39,7 @@ Bu projeye katkı sağlamak isterseniz, pull request gönderebilir veya issues s
 
      English Explanation
 
-### vbscript ve powershell ve versiyonu:
+### vbscript and powershell version:
 The .zip archive contains the vbScript version. The PowerShell version has a .bat extension.
 
 The .bat file actually contains PowerShell code, but special code has been added to allow the PowerShell code to be run from CMD. Therefore, it has the .bat extension.
