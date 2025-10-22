@@ -26,6 +26,11 @@ VBScript betik dosyası,  3. parti programlara gerek kalmadan Windows işletim s
 - **Ağ Kartı ve IP Adresi Bilgisi**: Ağ kartı bilgilerini, yerel IP adreslerini, DNS ve DHCP Sunucu bilgilerini ve WAN IP adresini gösterir.
 - **Disk Bilgisi**: HDD, SSD veya USB gibi disk türlerini ve kapasite bilgilerini sunar.
 
+### Powershell versiyonu:
+.bat uzantılı dosyanın içeriği aslında PowerShell kodudur, ancak PowerShell kodunun CMD'den çalıştırılmasına olanak tanıyan özel bir kod eklenmiştir. Bu nedenle .bat uzantısına sahiptir.
+
+.vbs veya .bat uzantılı herhangi bir dosyayı kullanabilirsiniz.
+
 ### Katkı Sağlama:
 Bu projeye katkı sağlamak isterseniz, pull request gönderebilir veya issues sekmesinden geri bildirimde bulunabilirsiniz.
 
@@ -33,7 +38,7 @@ Bu projeye katkı sağlamak isterseniz, pull request gönderebilir veya issues s
      English Explanation
 
 ## Hardware Info  
-VBScript file displays a summary of all your hardware information using only the built-in Windows system codes, without the need for third-party programs. The script collects information about various system components and presents it visually to the user. Below are the main data provided by the script:
+A script file with a VBScript or bat extension displays a summary of all your hardware information using only the built-in Windows system codes, without the need for third-party programs. The script collects information about various system components and presents it visually to the user. Below are the main data provided by the script:
 
 ### Features:
 - **Operating System Information**: Displays information such as the Windows version, OS architecture, and the last format date.
@@ -43,6 +48,11 @@ VBScript file displays a summary of all your hardware information using only the
 - **Graphics Card Information**: Includes the graphics card brand, RAM capacity, and driver version.
 - **Network Adapter and IP Address Information**: Shows network card information, local IP addresses, DNS and DHCP Server information and WAN IP address.
 - **Disk Information**: Displays disk types (HDD, SSD, or USB) and their capacity information.
+
+### Powershell version:
+The contents of a .bat file are actually PowerShell code, but with special code added that allows the PowerShell code to be run from CMD. That's why it has the .bat extension.
+
+You can use any file with the .vbs or .bat extension.
 
 ### Contributing:
 If you would like to contribute to this project, you can send a pull request or provide feedback through the issues section.
