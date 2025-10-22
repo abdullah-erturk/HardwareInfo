@@ -10,8 +10,9 @@ https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Donan%C4%B1m
 
 ![sample](https://github.com/abdullah-erturk/HardwareInfo/blob/main/preview.png)
 
-     Türkçe Açıklama
-
+<details>
+<summary><strong>Türkçe Tanıtım</strong></summary>
+     
 ### vbscript ve powershell versiyonu:
 zip arşiv dosya içeriğinde vbscript versiyonu vardır. Powershell versiyonu ise .bat uzantılı olan dosyadır
 
@@ -33,9 +34,7 @@ VBScript veya bat uzantılı betik dosyası,  3. parti programlara gerek kalmada
 
 ### Katkı Sağlama:
 Bu projeye katkı sağlamak isterseniz, pull request gönderebilir veya issues sekmesinden geri bildirimde bulunabilirsiniz.
-
-
-     English Explanation
+</details>
 
 # Hardware Info
 
@@ -45,6 +44,10 @@ https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Hardware_Inf
 ### English powershell version file direct download link:
 https://github.com/abdullah-erturk/HardwareInfo/raw/refs/heads/main/Hardware_Info_EN.bat
 
+
+<details>
+<summary><strong>English Description</strong></summary>
+     
 ### vbscript and powershell version:
 The .zip archive contains the vbScript version. The PowerShell version has a .bat extension.
 
@@ -66,3 +69,5 @@ A script file with a VBScript or bat extension displays a summary of all your ha
 
 ### Contributing:
 If you would like to contribute to this project, you can send a pull request or provide feedback through the issues section.
+
+</details>
